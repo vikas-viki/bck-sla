@@ -1,18 +1,33 @@
+// worker2
 const { parentPort, Worker } = require('worker_threads');
-const { SerialPort } = require('serialport');
 const worker3 = new Worker("./workers/worker3.js");
+const { OPERATIONS, getPort, ERRORS } = require('../constants');
+const fs = require("fs");
+
+let pd;
 
 parentPort.on('message', async (message) => {
-    console.log("worker2", message);
-    var port;
-    if (message.message == "INIT") {
-        port = new SerialPort({ path: message.port.portPath.toString(), baudRate: message.port.portBaudRate });
-        port.on("open", ()=>{
-            worker3.postMessage({ message: "INIT", port: message.port, writeFileName: message.writeFileName });
-        });
+    if (message.message === OPERATIONS.INIT) {
+        try {
+            // var port = await getPort();
+            // console.log("port: ", port);
+            pd = fs.openSync(message.port.path, 'r+');
+        } catch (e) {
+            throw (ERRORS.ERROR_OPENING_PORT, e);
+        }
+        worker3.postMessage({ message: OPERATIONS.INIT, pd, writeFileName: message.writeFileName });
     }
 
-    if (message.message == "WRITE_PORT") {
+    if (message.message === OPERATIONS.PORT_WRITE) {
+        const data = Buffer.from(message.data);
 
+        try {
+            fs.writeSync(pd, data);
+            console.log("PORT WRITE:", data.toString('utf8'));
+
+            worker3.postMessage({ message: OPERATIONS.PORT_READ, length: data.length, pd });
+        } catch (err) {
+            console.error('Error writing to port:', err);
+        }
     }
 });

@@ -1,16 +1,25 @@
+// worker3
 const { parentPort, Worker } = require('worker_threads');
-const { SerialPortStream } = require('@serialport/stream')
-const { MockBinding } = require('@serialport/binding-mock')
-const SerialPort = require('serialport');
+const { OPERATIONS, READ_SIZE, ERRORS } = require('../constants');
 const worker4 = new Worker("./workers/worker4.js");
+const fs = require("fs");
+
+let pd;
 
 parentPort.on('message', async (message) => {
-    console.log("worker3:", message);
-    if (message.message == "INIT") {
-        MockBinding.createPort(message.port.portPath.toString(), { echo: true, record: true });
+    if (message.message === OPERATIONS.INIT) {
+        pd = message.pd;
+        worker4.postMessage({ message: OPERATIONS.INIT, writeFileName: message.writeFileName });
+    }
 
-        const port = new SerialPortStream({ binding: MockBinding, path: message.port.portPath.toString(), baudRate: message.port.portBaudRate })
+    if (message.message === OPERATIONS.PORT_READ) {
+        var size = Math.min(READ_SIZE, message.length);
+        const buffer = Buffer.alloc(size);
+        fs.readSync(message.pd, buffer, 0, buffer.length, null);
+        console.log("PORT READ:", buffer.toString('utf8'));
 
-        worker4.postMessage({ message: "INIT", writeFileName: message.writeFileName });
+        // Optionally send data to worker4 for further processing
+        worker4.postMessage({ message: OPERATIONS.FILE_WRITE, buffer });
+
     }
 });

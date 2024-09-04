@@ -1,8 +1,6 @@
-const express = require('express');
 const { SerialPort } = require('serialport');
-const { SerialPortStream } = require('@serialport/stream')
-const { MockBinding } = require('@serialport/binding-mock')
 const { Worker } = require('worker_threads');
+const express = require('express');
 
 const cors = require('cors');
 const app = express();
@@ -12,9 +10,9 @@ const worker1 = new Worker("./workers/worker1.js");
 app.use(cors());
 app.use(express.json());
 
-var portPath, portBaudRate, readFileName, writeFileName;
+var path, _baudRate, readFileName, writeFileName;
 
-app.post('/open-port', async (req, res) => {
+app.post('/set-port', async (req, res) => {
     const { productId, vendorId, baudRate } = req.body;
 
     SerialPort.list().then(ports => {
@@ -24,22 +22,10 @@ app.post('/open-port', async (req, res) => {
         );
 
         if (portInfo) {
-            portPath = portInfo.path.toString();
-            portBaudRate = baudRate;
-            // port = new SerialPort({ path: portInfo.path.toString(), baudRate });
+            path = portInfo.path.toString();
+            _baudRate = baudRate;
 
-            // port.on('open', () => {
-            res.status(200).send("PORT OPENED!");
-            // });
-
-            // port.on('error', (err) => {
-            //     console.error('Error opening port:', err);
-            //     res.status(500).send('Failed to open port');
-            // });
-
-            // port.on('data', (data) => {
-            //     console.log('Data:', data.toString());
-            // });
+            res.status(200).send("PORT DATA SET!");
         } else {
             res.status(404).send('PORT NOT FOUND!');
         }
@@ -51,6 +37,7 @@ app.post('/open-port', async (req, res) => {
 
 app.post('/set-files', async (req, res) => {
     var body = req.body;
+    
     try {
         readFileName = body.readableName;
         writeFileName = body.writableName;
@@ -65,27 +52,10 @@ app.post('/start-operation', async (req, res) => {
     res.status(200).send("OPERATION STARTED!");
     worker1.postMessage({
         MESSAGE: "START_OPERATION",
-        port: { portPath, portBaudRate },
+        port: { path, baudRate: _baudRate },
         readFileName,
         writeFileName
     });
-});
-
-app.post('/close-port', async (req, res) => {
-    try {
-        console.log("closing port!");
-
-        // port must be created before creating a mock one!
-        var _port = new SerialPort({ path: portPath.toString(), baudRate: portBaudRate });
-        _port.on("open", () => {
-            MockBinding.createPort(portPath.toString());
-            const port = new SerialPortStream({ binding: MockBinding, path: portPath.toString(), baudRate: portBaudRate });
-            port.close();
-        });
-        res.status(200).send("PORT CLOSED!");
-    } catch (e) {
-        res.status(500).send("ERROR ON CLOSE!");
-    }
 });
 
 app.listen(3000, () => {
