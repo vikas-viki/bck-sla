@@ -21,9 +21,9 @@ parentPort.on('message', async (message) => {
 
         try {
             fs.writeSync(pd, data);
-            console.log("PORT WRITE:", data.toString('utf8'));
+            // console.log("PORT WRITE:", data.toString('utf8'));
 
-            worker3.postMessage({ message: OPERATIONS.PORT_READ, length: data.length, pd });
+            worker3.postMessage({ message: OPERATIONS.PORT_READ, length: data.length, pd, end: message.end });
         } catch (err) {
             console.error('Error writing to port:', err);
         }

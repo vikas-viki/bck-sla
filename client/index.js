@@ -25,17 +25,17 @@ async function selectPort() {
 
 async function selectFiles() {
     var options = {
-        excludeAcceptAllOption: true,
-        multiple: false,
-        startIn: "desktop",
-        types: [
-            {
-                description: "Text files",
-                accept: {
-                    'text/plain': ['.txt']
-                }
-            }
-        ]
+        // excludeAcceptAllOption: true,
+        // multiple: false,
+        // startIn: "desktop",
+        // types: [
+        //     {
+        //         description: "Text files",
+        //         accept: {
+        //             'text/plain': ['.txt']
+        //         }
+        //     }
+        // ]
     };
 
     let [fileHandle1] = await window.showOpenFilePicker(options);

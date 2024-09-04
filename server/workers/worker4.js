@@ -38,8 +38,15 @@ parentPort.on('message', (message) => {
                 console.error(ERRORS.ERROR_WRITING_FILE, err);
                 return;
             }
-
-            console.log(`Wrote to file: "`, buffer.toString('utf-8'), '"');
+            // console.log(`Wrote to file: "`, buffer.toString('utf-8'), '"');
         });
+
+        if (message?.end.atEnd) {
+            var endTime = Date.now();
+            var noOfKBs = message.end.size / 1024;
+            var timeTaken = (endTime - message.end.startTime) / 1000;
+            var transferSpeed = Number(noOfKBs / timeTaken).toFixed(4);
+            console.log(transferSpeed + " KBs/s");
+        }
     }
 });

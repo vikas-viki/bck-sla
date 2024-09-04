@@ -31,7 +31,7 @@ async function getPort(path, baudRate) {
     port.on('open', () => {
         port.close();
     })  
-    console.log({ port });
+    // console.log({ port });
 }
 
 module.exports = {

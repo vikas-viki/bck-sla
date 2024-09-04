@@ -16,10 +16,10 @@ parentPort.on('message', async (message) => {
         var size = Math.min(READ_SIZE, message.length);
         const buffer = Buffer.alloc(size);
         fs.readSync(message.pd, buffer, 0, buffer.length, null);
-        console.log("PORT READ:", buffer.toString('utf8'));
+        // console.log("PORT READ:", buffer.toString('utf8'));
 
         // Optionally send data to worker4 for further processing
-        worker4.postMessage({ message: OPERATIONS.FILE_WRITE, buffer });
+        worker4.postMessage({ message: OPERATIONS.FILE_WRITE, buffer, end: message.end });
 
     }
 });
