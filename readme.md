@@ -30,7 +30,7 @@ npm install
 node index.js
 ```
 
-5. Install the [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer_) extension in Visual Studio Code.
+5. Install the [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) extension in Visual Studio Code.
 
 6. Launch the frontend:
 
