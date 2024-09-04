@@ -2,7 +2,7 @@
 
 This project consists of two components: a frontend written in HTML and a server written in Node.js. Here's an overview of the project's operations:
 
-![Project Overview](https://i.ibb.co/mFThk4V/image.png)
+![Project Overview](./data/workflow.png)
 
 ## Setup
 
