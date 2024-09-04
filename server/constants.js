@@ -1,6 +1,6 @@
 const { SerialPort } = require("serialport");
 
-const READ_SIZE = 15;
+const READ_SIZE = 8;
 
 const OPERATIONS = {
     INIT: 1,
@@ -19,16 +19,19 @@ const ERRORS = {
     ERROR_OPENING_PORT: 7,
 };
 
-async function getPort() {
+async function getPort(path, baudRate) {
     const port = new SerialPort({
-        path: '/dev/ttyUSB0',
-        baudRate: 9600,
-        dataBits: 8,
-        stopBits: 1,
-        parity: 'none',
+        path,
+        baudRate,
+        // dataBits: 8,
+        // stopBits: 1,
+        // parity: 'none',
         flowControl: false
     });
-    return port;
+    port.on('open', () => {
+        port.close();
+    })  
+    console.log({ port });
 }
 
 module.exports = {

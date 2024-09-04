@@ -3,6 +3,7 @@ const { Worker } = require('worker_threads');
 const express = require('express');
 
 const cors = require('cors');
+const { getPort } = require('./constants');
 const app = express();
 
 const worker1 = new Worker("./workers/worker1.js");
@@ -15,7 +16,7 @@ var path, _baudRate, readFileName, writeFileName;
 app.post('/set-port', async (req, res) => {
     const { productId, vendorId, baudRate } = req.body;
 
-    SerialPort.list().then(ports => {
+    SerialPort.list().then(async ports => {
         const portInfo = ports.find(port =>
             port.productId === productId.toString(16) &&
             port.vendorId === vendorId.toString(16)
@@ -24,6 +25,8 @@ app.post('/set-port', async (req, res) => {
         if (portInfo) {
             path = portInfo.path.toString();
             _baudRate = baudRate;
+
+            await getPort(path, _baudRate);
 
             res.status(200).send("PORT DATA SET!");
         } else {

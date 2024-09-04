@@ -9,8 +9,6 @@ let pd;
 parentPort.on('message', async (message) => {
     if (message.message === OPERATIONS.INIT) {
         try {
-            // var port = await getPort();
-            // console.log("port: ", port);
             pd = fs.openSync(message.port.path, 'r+');
         } catch (e) {
             throw (ERRORS.ERROR_OPENING_PORT, e);

@@ -31,6 +31,8 @@ parentPort.on('message', (message) => {
         }
         var buffer = Buffer.from(message.buffer);
 
+        buffer = Buffer.from(buffer.filter(byte => byte !== 0));
+
         fs.write(_fd, buffer, 0, buffer.length, 0, (err, written, buffer) => {
             if (err) {
                 console.error(ERRORS.ERROR_WRITING_FILE, err);
