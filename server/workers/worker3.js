@@ -15,10 +15,10 @@ parentPort.on('message', async (message) => {
     if (message.message === OPERATIONS.PORT_READ) {
         var size = Math.min(READ_SIZE, message.length);
         const buffer = Buffer.alloc(size);
+        // reading data from the port
         fs.readSync(message.pd, buffer, 0, buffer.length, null);
         // console.log("PORT READ:", buffer.toString('base64'));
 
         worker4.postMessage({ message: OPERATIONS.FILE_WRITE, buffer, end: message.end });
-
     }
 });

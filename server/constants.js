@@ -19,19 +19,16 @@ const ERRORS = {
     ERROR_OPENING_PORT: 7,
 };
 
+// used to set the baudRate of the port
 async function getPort(path, baudRate) {
     const port = new SerialPort({
         path,
         baudRate,
-        // dataBits: 8,
-        // stopBits: 1,
-        // parity: 'none',
         flowControl: false
     });
     port.on('open', () => {
         port.close();
     })  
-    // console.log({ port });
 }
 
 module.exports = {

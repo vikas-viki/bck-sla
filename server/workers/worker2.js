@@ -9,6 +9,7 @@ let pd;
 parentPort.on('message', async (message) => {
     if (message.message === OPERATIONS.INIT) {
         try {
+            // getting port data
             pd = fs.openSync(message.port.path, 'r+');
         } catch (e) {
             throw (ERRORS.ERROR_OPENING_PORT, e);
@@ -20,6 +21,7 @@ parentPort.on('message', async (message) => {
         const data = Buffer.from(message.data);
 
         try {
+            // writing data to port
             fs.writeSync(pd, data);
             // console.log("PORT WRITE:", data.toString('utf8'));
 

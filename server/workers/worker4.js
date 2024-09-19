@@ -20,6 +20,7 @@ parentPort.on('message', async (message) => {
     if (message.message == OPERATIONS.FILE_WRITE) {
         if (!_fd) {
             try {
+                // getting file data, if file data is not present
                 fs.open(filePath, 'a', (err, fd) => {
                     _fd = fd;
 
@@ -31,6 +32,7 @@ parentPort.on('message', async (message) => {
         }
         var buffer = Buffer.from(message.buffer, 'base64');
 
+        // writing data to the file
         fs.write(_fd, buffer, 0, buffer.length, 0, (err, written, buffer) => {
             if (err) {
                 console.error(ERRORS.ERROR_WRITING_FILE, err);
@@ -42,6 +44,7 @@ parentPort.on('message', async (message) => {
         if (message?.end.atEnd) {
             var file_size;
             var endTime = Date.now();
+            // getting stats and computing the speed and data accuracy
             fs.stat(filePath, (err, stats) => {
                 if (err) {
                     throw (ERRORS.ERROR_GETTING_FILE_STATS, err);

@@ -1,15 +1,23 @@
+var portId = 3000;
+
+/**
+ * Requests a port from the user and sends port information to a server.
+ */
 async function selectPort() {
     try {
+        // Request the user to select a serial port.
         const port = await navigator.serial.requestPort();
         console.log("Port has been selected!");
 
+        // Retrieve port information needed for the server.
         const portInfo = {
             productId: port.getInfo().usbProductId,
             vendorId: port.getInfo().usbVendorId,
-            baudRate: 9600
+            baudRate: 9600 // Set baud rate for the port.
         };
 
-        var response = await fetch('http://localhost:3000/set-port', {
+        // Send the port information to the server using a POST request.
+        var response = await fetch(`http://localhost:${portId}/set-port`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -23,6 +31,9 @@ async function selectPort() {
     }
 }
 
+/**
+ * Opens a file picker to select a file and save it with a new name.
+ */
 async function selectFiles() {
     var options = {
         // excludeAcceptAllOption: true,
@@ -38,16 +49,23 @@ async function selectFiles() {
         // ]
     };
 
+    // Show the file picker to select a file for reading.
     let [fileHandle1] = await window.showOpenFilePicker(options);
     let readFile = await fileHandle1.getFile();
+
+    // Generate a new filename for saving the file.
     var writableName = `write.${readFile.name.split(".").pop()}`;
+
+    // Show the file save picker to select the location for saving the file.
     await window.showSaveFilePicker({
         suggestedName: writableName,
         types: [],
     });
+
     var readableName = readFile.name;
 
-    var response = await fetch('http://localhost:3000/set-files', {
+    // Send the file names to the server using a POST request.
+    var response = await fetch(`http://localhost:${portId}/set-files`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -58,13 +76,18 @@ async function selectFiles() {
     console.log(await response.text());
 }
 
+/**
+ * Starts an operation on the server.
+ */
 async function runScript() {
-    var response = await fetch('http://localhost:3000/start-operation', {
+    // Send a POST request to the server to start an operation.
+    var response = await fetch(`http://localhost:${portId}/start-operation`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: ""
     });
+
     console.log(await response.text());
 }

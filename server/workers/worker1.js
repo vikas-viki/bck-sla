@@ -22,11 +22,13 @@ parentPort.on('message', (message) => {
     var file_size;
     var read_size = READ_SIZE;
 
+    // opening the file to be read
     fs.open(FILE_PATH, 'r', (err, fd) => {
         if (err) {
             throw (ERRORS.ERROR_OPENING_FILE, err);
         }
 
+        // getting the stas of the read file
         fs.stat(FILE_PATH, (err, stats) => {
             if (err) {
                 throw (ERRORS.ERROR_GETTING_FILE_STATS, err);
@@ -37,6 +39,7 @@ parentPort.on('message', (message) => {
 
         function readNext() {
             const BUFFER = Buffer.alloc(read_size);
+            // reading the data from the file
             fs.read(fd, BUFFER, 0, read_size, read_position, (err, num) => {
                 if (err) {
                     throw (ERRORS.ERROR_READING_FILE, err);
