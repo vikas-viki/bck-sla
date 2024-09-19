@@ -5,7 +5,7 @@ const { OPERATIONS, ERRORS } = require('../constants');
 
 var filePath;
 var _fd;
-parentPort.on('message', (message) => {
+parentPort.on('message', async (message) => {
     if (message.message == OPERATIONS.INIT) {
         const writeFileName = message.writeFileName;
         filePath = path.join(__dirname, '..', '..', 'data', writeFileName);
@@ -22,7 +22,7 @@ parentPort.on('message', (message) => {
             try {
                 fs.open(filePath, 'a', (err, fd) => {
                     _fd = fd;
-                    console.log({ _fd });
+
                     if (err) {
                         throw (ERRORS.ERROR_OPENING_FILE, err);
                     }
@@ -36,15 +36,24 @@ parentPort.on('message', (message) => {
                 console.error(ERRORS.ERROR_WRITING_FILE, err);
                 return;
             }
-            console.log(`Wrote to file: "`, buffer.toString("base64"), '"');
+            // console.log(`Wrote to file: "`, buffer.toString("base64"), '"');
         });
 
         if (message?.end.atEnd) {
+            var file_size;
             var endTime = Date.now();
-            var noOfKBs = message.end.size / 1024;
-            var timeTaken = (endTime - message.end.startTime) / 1000;
-            var transferSpeed = Number(noOfKBs / timeTaken).toFixed(4);
-            console.log(transferSpeed + " KBs/s");
+            fs.stat(filePath, (err, stats) => {
+                if (err) {
+                    throw (ERRORS.ERROR_GETTING_FILE_STATS, err);
+                }
+                file_size = stats.size;
+
+                console.log("READ_SIZE: ", message.end.size, "bytes \nWRITE_SIZE: ", file_size, "bytes");
+                var noOfKBs = message.end.size / 1024;
+                var timeTaken = (endTime - message.end.startTime) / 1000;
+                var transferSpeed = Number(noOfKBs / timeTaken).toFixed(4);
+                console.log(transferSpeed + " KBs/s");
+            });
         }
     }
 });

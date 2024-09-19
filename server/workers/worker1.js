@@ -44,17 +44,16 @@ parentPort.on('message', (message) => {
 
                 if (read_position < file_size) {
                     read_position += read_size;
-                    let a = read_size;
                     read_size = Math.min(read_size, file_size - read_position);
-                    let b = read_size;
-                    if (a != b) {
+                    
+                    if (read_size == 0) {
                         end.atEnd = true;
                     }
                     // console.log("FILE READ: ", BUFFER.toString('base64'));
                     worker2.postMessage({ message: OPERATIONS.PORT_WRITE, data: BUFFER, end })
                     readNext();
                 } else {
-                    console.log('Reached the end of the file.');
+                    // console.log('Reached the end of the file.');
                     fs.close(fd, (err) => {
                         if (err) throw (ERRORS.ERROR_CLOSING_FILE, err);
                     });
