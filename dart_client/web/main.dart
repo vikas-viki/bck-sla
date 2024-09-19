@@ -13,10 +13,7 @@ void runScript() {
   js.context.callMethod('runScript');
 }
 void main() {
-  final now = DateTime.now();
   final element = web.document.querySelector('#output') as web.HTMLDivElement;
-  element.text = 'The time is ${now.hour}:${now.minute} '
-      'and your Dart web app is running!';
 
   final selectPortButton = web.HTMLButtonElement();
   selectPortButton.text = 'Select Port';
