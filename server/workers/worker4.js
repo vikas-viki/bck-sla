@@ -29,16 +29,14 @@ parentPort.on('message', (message) => {
                 });
             } catch (e) { }
         }
-        var buffer = Buffer.from(message.buffer);
-
-        buffer = Buffer.from(buffer.filter(byte => byte !== 0));
+        var buffer = Buffer.from(message.buffer, 'base64');
 
         fs.write(_fd, buffer, 0, buffer.length, 0, (err, written, buffer) => {
             if (err) {
                 console.error(ERRORS.ERROR_WRITING_FILE, err);
                 return;
             }
-            // console.log(`Wrote to file: "`, buffer.toString('utf-8'), '"');
+            console.log(`Wrote to file: "`, buffer.toString("base64"), '"');
         });
 
         if (message?.end.atEnd) {

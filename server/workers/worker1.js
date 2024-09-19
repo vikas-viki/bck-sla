@@ -50,7 +50,7 @@ parentPort.on('message', (message) => {
                     if (a != b) {
                         end.atEnd = true;
                     }
-                    // console.log("FILE READ: ", BUFFER.toString('utf8'));
+                    // console.log("FILE READ: ", BUFFER.toString('base64'));
                     worker2.postMessage({ message: OPERATIONS.PORT_WRITE, data: BUFFER, end })
                     readNext();
                 } else {

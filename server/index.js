@@ -24,6 +24,8 @@ app.post('/set-port', async (req, res) => {
 
         if (portInfo) {
             path = portInfo.path.toString();
+
+            console.log({path})
             _baudRate = baudRate;
 
             await getPort(path, _baudRate);

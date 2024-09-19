@@ -1,8 +1,8 @@
 async function selectPort() {
     try {
         const port = await navigator.serial.requestPort();
-        console.log("Port has been selected by the user");
-        
+        console.log("Port has been selected!");
+
         const portInfo = {
             productId: port.getInfo().usbProductId,
             vendorId: port.getInfo().usbVendorId,
