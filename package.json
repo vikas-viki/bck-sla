@@ -2,20 +2,19 @@
   "name": "sla",
   "description": "This project consists of two components: a frontend written in HTML and a server written in Node.js. Here's an overview of the project's operations:",
   "version": "1.0.0",
-  "main": "index.js",
   "scripts": {
     "start": "concurrently \"npm:start:node:server\" \"npm:start:dart:ui\"",
     "start:node:server": "node server/index.js 3000",
     "start:dart:ui": "cd dart_client && webdev serve",
-    "start:server:nodemon": "nodemon server/index.js 3000"
+    "start:node:server:nodemon": "nodemon server/index.js 3000"
   },
   "repository": {
-    "type": "git",
+    "type": "git",  
     "url": "git+https://github.com/vikas-viki/bck-sla.git"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "III_BCA_@Bhandarkars_college_kundapura",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/vikas-viki/bck-sla/issues"
   },
