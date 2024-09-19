@@ -17,6 +17,9 @@ void runScript() async {
   for (int i = 0; i <= 1000; i++) {
     Future.delayed(Duration(milliseconds: i * 100), () async {
       double percent = await fetchStatus();
+      web.document.querySelector(".progress-label")?.firstChild?.text =
+          "Operation progress " + percent.toString() + "%";
+
       updateProgress(percent);
     });
   }
@@ -68,12 +71,18 @@ void main() {
   final progressContainer = web.HTMLDivElement();
   progressContainer.id = 'progress-container';
 
+  final progressLabel = web.HTMLSpanElement();
+  progressLabel.className = 'progress-label';
+  progressLabel.text = "Operation Progress";
+
   final progressBar = web.HTMLProgressElement();
   progressBar.id = 'progress-bar';
   progressBar.max = 100;
   progressBar.value = 0;
 
+  progressContainer.append(progressLabel);
   progressContainer.append(progressBar);
+
   element.append(selectPortButton);
   element.append(selectFilesButton);
   element.append(runScriptButton);
