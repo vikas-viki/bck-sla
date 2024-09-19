@@ -1,6 +1,6 @@
 // worker2
 const { parentPort, Worker } = require('worker_threads');
-const worker3 = new Worker("./workers/worker3.js");
+const worker3 = new Worker("./server/workers/worker3.js");
 const { OPERATIONS, getPort, ERRORS } = require('../constants');
 const fs = require("fs");
 

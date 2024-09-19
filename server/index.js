@@ -4,11 +4,10 @@ const express = require('express');
 
 const cors = require('cors');
 const { getPort } = require('./constants');
-const { argv, argv0 } = require('process');
-const { parseArgs } = require('update/lib/utils');
+const { argv } = require('process');
 const app = express();
 
-const worker1 = new Worker("./workers/worker1.js");
+const worker1 = new Worker("./server/workers/worker1.js");
 
 app.use(cors());
 app.use(express.json());
@@ -28,7 +27,7 @@ app.post('/set-port', async (req, res) => {
         if (portInfo) {
             path = portInfo.path.toString();
 
-            console.log({ path })
+            // console.log({ path })
             _baudRate = baudRate;
 
             await getPort(path, _baudRate);
