@@ -1,18 +1,19 @@
 const { SerialPort } = require('serialport');
 const { Worker } = require('worker_threads');
 const express = require('express');
-
+const fs = require('fs');
 const cors = require('cors');
 const { getPort } = require('./constants');
 const { argv } = require('process');
 const app = express();
+const fspath = require('path');
 
 const worker1 = new Worker("./server/workers/worker1.js");
 
 app.use(cors());
 app.use(express.json());
 
-var path, _baudRate, readFileName, writeFileName;
+var path, _baudRate, readFileName = '', writeFileName = '';
 
 // recieves the set port data request from the port
 app.post('/set-port', async (req, res) => {
@@ -64,6 +65,28 @@ app.post('/start-operation', async (req, res) => {
         port: { path, baudRate: _baudRate },
         readFileName,
         writeFileName
+    });
+});
+
+app.get('/get-status', async (req, res) => {
+    const READ_PATH = fspath.join(__dirname, '..', 'data', readFileName);
+    const WRITE_PATH = fspath.join(__dirname, '..', 'data', writeFileName);
+
+    var readSize, writeSize;
+    fs.stat(READ_PATH, (err, stats) => {
+        if (err) {
+            throw (ERRORS.ERROR_GETTING_FILE_STATS, err);
+        }
+        readSize = stats.size;
+
+        fs.stat(WRITE_PATH, (err, stats) => {
+            if (err) {
+                throw (ERRORS.ERROR_GETTING_FILE_STATS, err);
+            }
+            writeSize = stats.size;
+            
+            res.send({ percent: ((writeSize / readSize) * 100).toFixed(2) });
+        });
     });
 });
 

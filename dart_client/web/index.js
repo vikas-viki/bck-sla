@@ -91,3 +91,22 @@ async function runScript() {
 
     console.log(await response.text());
 }
+
+// used to get the status of the operation
+async function getStatus() {
+    var response = await fetch(`http://localhost:${portId}/get-status`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    });
+
+    var result = JSON.parse(await response.text());
+    console.log("percent: ", result["percent"]);
+    var percent = Number(result.percent);
+    return percent;
+}
+
+function log(param) {
+    console.log(param);
+}
