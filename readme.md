@@ -17,27 +17,19 @@ Follow these steps to run the project:
 
 3. Install dependencies:
 
-- Navigate to the `sla/server` directory.
-Install the project dependencies by running:
-```bash
-npm install
-```
+   move inside the directory and install the project dependencies by running:
+   ```bash
+   npm install
+   ```
 
-4. Start the local server:
+2. run the application
+      
+   ```bash
+   npm run start
+   ``` 
+   you can always change the configuration in package.json
 
-- Inside the `sla/server` directory, run:
-```bash
-node index.js
-```
-
-5. Install the [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) extension in Visual Studio Code.
-
-6. Launch the frontend:
-
-- Right-click the `client/index.html` file.
-- Select `Open with Live Server`. This will open the file in your browser.
-
-7. Use the application in the browser:
+3. Use the application in the browser:
 
 - Select a port by clicking `Select port`.
 - Select files by clicking `Select files`. Note: You must select and save the files inside the `sla/data` folder.
